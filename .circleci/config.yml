@@ -24,7 +24,7 @@ jobs:
       - run:
           name: Push to docker registry
           command: |
-            gcloud auth configure-docker --silent
+            gcloud auth configure-docker --quiet
             docker push "gcr.io/${PROJECT_ID}/${CIRCLE_PROJECT_REPONAME}:${BUILD_NO}"
       - run:
           name: Create Release
