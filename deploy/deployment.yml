@@ -1,0 +1,34 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: lookerbot
+  namespace: #{namespace}
+spec:
+  replicas: #{replicas}
+  template:
+    metadata:
+      labels:
+        app: lookerbot
+    spec:
+      containers:
+        - name: lookerbot
+          image: gcr.io/massage-shared/lookerbot:#{build_number}
+          imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: "#{limit_cpu}"
+              memory: "#{limit_memory}"
+          env:
+          - name: NODE_ENV
+            value: #{node_env}
+          - name: SLACK_API_KEY
+            value: #{slack_api_key}
+          - name: LOOKER_URL
+            value: #{looker_url}
+          - name: LOOKER_API_BASE_URL
+            value: #{looker_api_base_url}
+          - name: LOOKER_API_3_CLIENT_ID
+            value: #{looker_api_3_client_id}
+          - name: LOOKER_API_3_CLIENT_SECRET
+            value: #{looker_api_3_client_secret}
+            
