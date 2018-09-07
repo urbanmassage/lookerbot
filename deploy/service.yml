@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: lookerbot
+  namespace: #{namespace}
+spec:
+  selector:
+    app: lookerbot
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 3333
+  type: LoadBalancer
