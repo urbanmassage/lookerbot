@@ -17,23 +17,15 @@ jobs:
             echo $GCLOUD_SERVICE_KEY | base64 --decode --ignore-garbage > ${HOME}/gcloud-service-key.json
             gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
             gcloud config set project $PROJECT_ID
-      - restore_cache:
-          key: dependency-cache-{{ checksum "yarn.lock" }}
-      - run:
-          name: Install Dependencies
-          command: |
-            yarn install --pure-lockfile
-      - save_cache:
-          key: dependency-cache-{{ checksum "yarn.lock" }}
-          paths:
-            - ./node_modules
       - run:
           name: Build
           command: |
             docker build -t gcr.io/${PROJECT_ID}/${CIRCLE_PROJECT_REPONAME}:${BUILD_NO} .
       - run:
           name: Push to docker registry
-          command: gcloud docker -- push "gcr.io/${PROJECT_ID}/${CIRCLE_PROJECT_REPONAME}:${BUILD_NO}"
+          command: |
+            gcloud auth configure-docker --silent
+            docker push "gcr.io/${PROJECT_ID}/${CIRCLE_PROJECT_REPONAME}:${BUILD_NO}"
       - run:
           name: Create Release
           command: curl https://raw.githubusercontent.com/urbanmassage/gist/master/create_octopus_release.sh | bash
